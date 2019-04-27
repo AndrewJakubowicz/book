@@ -25,7 +25,7 @@ wasm-game-of-life
 
 ## What's Inside
 
-Enter the new `wasm-game-of-life` project 
+Enter the new `wasm-game-of-life` project
 
 ```
 cd wasm-game-of-life
@@ -61,23 +61,15 @@ WebAssembly. It uses `wasm-bindgen` to interface with JavaScript. It imports the
 alerts a greeting message.
 
 ```rust
-extern crate cfg_if;
-extern crate wasm_bindgen;
-
 mod utils;
 
-use cfg_if::cfg_if;
 use wasm_bindgen::prelude::*;
 
-cfg_if! {
-    // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
-    // allocator.
-    if #[cfg(feature = "wee_alloc")] {
-        extern crate wee_alloc;
-        #[global_allocator]
-        static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-    }
-}
+// When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
+// allocator.
+#[cfg(feature = "wee_alloc")]
+#[global_allocator]
+static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
 extern {
@@ -102,10 +94,10 @@ code](debugging.html), but we can ignore this file for now.
 
 We use `wasm-pack` to orchestrate the following build steps:
 
-* Ensure that we have Rust 1.30 or newer and the `wasm32-unknown-unknown`
+- Ensure that we have Rust 1.30 or newer and the `wasm32-unknown-unknown`
   target installed via `rustup`,
-* Compile our Rust sources into a WebAssembly `.wasm` binary via `cargo`,
-* Use `wasm-bindgen` to generate the JavaScript API for using our Rust-generated
+- Compile our Rust sources into a WebAssembly `.wasm` binary via `cargo`,
+- Use `wasm-bindgen` to generate the JavaScript API for using our Rust-generated
   WebAssembly.
 
 To do all of that, run this command inside the project directory:
@@ -147,12 +139,12 @@ interesting values back and forth between wasm and JavaScript, it will help
 shepherd those values across the boundary.
 
 ```js
-import * as wasm from './wasm_game_of_life_bg';
+import * as wasm from "./wasm_game_of_life_bg";
 
 // ...
 
 export function greet() {
-    return wasm.greet();
+  return wasm.greet();
 }
 ```
 
@@ -167,7 +159,7 @@ suggestions! If you aren't using TypeScript, you can safely ignore this file.
 export function greet(): void;
 ```
 
-[TypeScript]: http://www.typescriptlang.org/
+[typescript]: http://www.typescriptlang.org/
 
 ### `wasm-game-of-life/pkg/package.json`
 
@@ -180,17 +172,12 @@ publish our package to npm.
 ```json
 {
   "name": "wasm-game-of-life",
-  "collaborators": [
-    "Your Name <your.email@example.com>"
-  ],
+  "collaborators": ["Your Name <your.email@example.com>"],
   "description": null,
   "version": "0.1.0",
   "license": null,
   "repository": null,
-  "files": [
-    "wasm_game_of_life_bg.wasm",
-    "wasm_game_of_life.d.ts"
-  ],
+  "files": ["wasm_game_of_life_bg.wasm", "wasm_game_of_life.d.ts"],
   "main": "wasm_game_of_life.js",
   "types": "wasm_game_of_life.d.ts"
 }
@@ -248,7 +235,7 @@ load `bootstrap.js`, which is a very thin wrapper around `index.js`.
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Hello wasm-pack!</title>
   </head>
   <body>
@@ -341,13 +328,11 @@ and you should be greeted with an alert message:
 [![Screenshot of the "Hello, wasm-game-of-life!" Web page alert](../images/game-of-life/hello-world.png)](../images/game-of-life/hello-world.png)
 
 Anytime you make changes and want them reflected on
-[http://localhost:8080/](http://localhost:8080/), just re-run the `wasm-pack
-build` command within the `wasm-game-of-life` directory.
+[http://localhost:8080/](http://localhost:8080/), just re-run the `wasm-pack build` command within the `wasm-game-of-life` directory.
 
 ## Exercises
 
-* Modify the `greet` function in `wasm-game-of-life/src/lib.rs` to take a `name:
-  &str` parameter that customizes the alerted message, and pass your name to the
+- Modify the `greet` function in `wasm-game-of-life/src/lib.rs` to take a `name: &str` parameter that customizes the alerted message, and pass your name to the
   `greet` function from inside `wasm-game-of-life/www/index.js`. Rebuild the
   `.wasm` binary with `wasm-pack build`, then refresh
   [http://localhost:8080/](http://localhost:8080/) in your Web browser and you
@@ -356,19 +341,19 @@ build` command within the `wasm-game-of-life` directory.
   <details>
     <summary>Answer</summary>
 
-    New version of the `greet` function in `wasm-game-of-life/src/lib.rs`:
+  New version of the `greet` function in `wasm-game-of-life/src/lib.rs`:
 
-    ```rust
-    #[wasm_bindgen]
-    pub fn greet(name: &str) {
-        alert(&format!("Hello, {}!", name));
-    }
-    ```
+  ```rust
+  #[wasm_bindgen]
+  pub fn greet(name: &str) {
+      alert(&format!("Hello, {}!", name));
+  }
+  ```
 
-    New invocation of `greet` in `wasm-game-of-life/www/index.js`:
+  New invocation of `greet` in `wasm-game-of-life/www/index.js`:
 
-    ```js
-    wasm.greet("Your Name");
-    ```
+  ```js
+  wasm.greet("Your Name");
+  ```
 
   </details>
